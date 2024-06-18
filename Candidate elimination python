@@ -1,0 +1,138 @@
+import numpy as np
+
+# Define the training data (example scenarios)
+data = np.array([
+    ['Sunny', 'Warm', 'Normal', 'Yes'],
+    ['Sunny', 'Warm', 'High', 'No'],
+    ['Overcast', 'Warm', 'Normal', 'Yes'],
+    ['Rainy', 'Cold', 'High', 'No']
+])
+
+# Function to check if a given instance satisfies a specific hypothesis
+def satisfies(instance, hypothesis):
+    for i in range(len(instance)-1):  # Exclude the last column (target)
+        if hypothesis[i] != '?' and instance[i] != hypothesis[i]:
+            return False
+    return True
+
+# Candidate Elimination Algorithm
+def candidate_elimination(data):
+    # Initialize general and specific hypotheses
+    specific_hypothesis = ['0'] * (len(data[0]) - 1)  # Initial specific hypothesis: ['0', '0', ..., '0']
+    general_hypothesis = [['?'] * (len(data[0]) - 1)]  # Initial general hypothesis: [['?', '?', ..., '?']]
+
+    for instance in data:
+        if instance[-1] == 'Yes':  # Positive instance
+            # Generalize the specific hypothesis
+            for i in range(len(instance)-1):
+                if specific_hypothesis[i] == '0':
+                    specific_hypothesis[i] = instance[i]
+                elif specific_hypothesis[i] != instance[i]:
+                    specific_hypothesis[i] = '?'
+                    
+            # Remove inconsistent hypotheses from the general set
+            j = 0
+            while j < len(general_hypothesis):
+                if not satisfies(instance, general_hypothesis[j]):
+                    general_hypothesis.pop(j)
+                else:
+                    j += 1
+                    
+        elif instance[-1] == 'No':  # Negative instance
+            # Remove consistent hypotheses from the general set
+            j = 0
+            while j < len(general_hypothesis):
+                if satisfies(instance, general_hypothesis[j]):
+                    # Generate new hypotheses
+                    new_hypotheses = []
+                    for k in range(len(instance)-1):
+                        if instance[k] != specific_hypothesis[k] and specific_hypothesis[k] != '?':
+                            new_hypothesis = ['?'] * (len(instance)-1)
+                            new_hypothesis[k] = specific_hypothesis[k]
+                            new_hypotheses.append(new_hypothesis)
+                    
+                    # Add new hypotheses to the general set
+                    general_hypothesis.pop(j)
+                    general_hypothesis.extend(new_hypotheses)
+                else:
+                    j += 1
+
+        print("Step:", instance)
+        print("Specific Hypothesis:", specific_hypothesis)
+        print("General Hypothesis:", general_hypothesis)
+
+# Run Candidate Elimination Algorithm
+candidate_elimination(data)
+
+
+
+
+
+
+2 import numpy as np
+
+# Define the training data (example scenarios)
+data = np.array([
+    ['Big', 'Red', 'Circle', 'No'],
+    ['Small', 'Red', 'Triangle', 'No'],
+    ['Small', 'Red', 'Circle', 'Yes'],
+    ['Big', 'Blue', 'Circle', 'No'],
+    ['Small', 'Blue', 'Circle', 'Yes']
+])
+
+# Function to check if a given instance satisfies a specific hypothesis
+def satisfies(instance, hypothesis):
+    for i in range(len(instance)-1):  # Exclude the last column (target)
+        if hypothesis[i] != '?' and instance[i] != hypothesis[i]:
+            return False
+    return True
+
+# Candidate Elimination Algorithm
+def candidate_elimination(data):
+    # Initialize general and specific hypotheses
+    specific_hypothesis = ['0'] * (len(data[0]) - 1)  # Initial specific hypothesis: ['0', '0', ..., '0']
+    general_hypothesis = [['?'] * (len(data[0]) - 1)]  # Initial general hypothesis: [['?', '?', ..., '?']]
+
+    for instance in data:
+        if instance[-1] == 'Yes':  # Positive instance
+            # Generalize the specific hypothesis
+            for i in range(len(instance)-1):
+                if specific_hypothesis[i] == '0':
+                    specific_hypothesis[i] = instance[i]
+                elif specific_hypothesis[i] != instance[i]:
+                    specific_hypothesis[i] = '?'
+                    
+            # Remove inconsistent hypotheses from the general set
+            j = 0
+            while j < len(general_hypothesis):
+                if not satisfies(instance, general_hypothesis[j]):
+                    general_hypothesis.pop(j)
+                else:
+                    j += 1
+                    
+        elif instance[-1] == 'No':  # Negative instance
+            # Remove consistent hypotheses from the general set
+            j = 0
+            while j < len(general_hypothesis):
+                if satisfies(instance, general_hypothesis[j]):
+                    # Generate new hypotheses
+                    new_hypotheses = []
+                    for k in range(len(instance)-1):
+                        if instance[k] != specific_hypothesis[k] and specific_hypothesis[k] != '?':
+                            new_hypothesis = ['?'] * (len(instance)-1)
+                            new_hypothesis[k] = specific_hypothesis[k]
+                            new_hypotheses.append(new_hypothesis)
+                    
+                    # Add new hypotheses to the general set
+                    general_hypothesis.pop(j)
+                    general_hypothesis.extend(new_hypotheses)
+                else:
+                    j += 1
+
+        print("Step:", instance)
+        print("Specific Hypothesis:", specific_hypothesis)
+        print("General Hypothesis:", general_hypothesis)
+        print()
+
+# Run Candidate Elimination Algorithm
+candidate_elimination(data)
